@@ -1,17 +1,18 @@
-/* Unified Solar Dashboard (Version 2.1 - Editor Fixed)
+/* Unified Solar Dashboard (Version 2.2 - MEA Rates Updated 2026)
  * Seamless Integration of Real-time Power, Daily History, and MEA Bill
  */
 
+// อัปเดตเรทค่าไฟ MEA ประเภท 1.2 ล่าสุด
 const DEFAULT_RATES = {
   serviceCharge: 24.62,
   tiers: [
-    { upTo: 150, rate: 3.2484 },
-    { upTo: 400, rate: 4.2218 },
-    { upTo: Infinity, rate: 4.4217 },
+    { upTo: 200, rate: 3.0000 },
+    { upTo: 400, rate: 4.1584 },
+    { upTo: Infinity, rate: 4.3583 },
   ],
 };
 const VAT_DEFAULT = 7;
-const FT_DEFAULT = 0.3972;
+const FT_DEFAULT = 0.1623; // อัปเดตค่า Ft เริ่มต้นเป็น 16.23 สตางค์
 
 function tieredEnergyCharge(units, tiers) {
   let remaining = Math.max(0, units);
@@ -129,7 +130,7 @@ class UnifiedSolarDashboard extends HTMLElement {
       cutoff_time: "09:00",
       history_months: 3,
       service_charge: 24.62,
-      ft_baht: 0.3972,
+      ft_baht: FT_DEFAULT,
       vat: 7
     };
   }
@@ -159,10 +160,10 @@ class UnifiedSolarDashboard extends HTMLElement {
     this._config.cutoff_day = Number(this._config.cutoff_day || 24);
     this._config.history_months = Number(this._config.history_months || 0);
     this._config.service_charge = Number(this._config.service_charge ?? 24.62);
-    this._config.ft_baht = Number(this._config.ft_baht ?? 0.3972);
+    this._config.ft_baht = Number(this._config.ft_baht ?? FT_DEFAULT);
     this._config.vat = Number(this._config.vat ?? 7);
     
-    // Merge duplicated keys if user pasted both old and new
+    // Merge duplicated keys
     if(config.entity_power_solar && !config.power_solar) this._config.power_solar = config.entity_power_solar;
     if(config.entity_power_usage && !config.power_usage) this._config.power_usage = config.entity_power_usage;
     if(config.entity_energy_solar_daily && !config.energy_solar_daily) this._config.energy_solar_daily = config.entity_energy_solar_daily;
@@ -179,7 +180,7 @@ class UnifiedSolarDashboard extends HTMLElement {
     this._updateRealtime();
     
     const now = Date.now();
-    if (now - this._lastFetch > 300000) { // 5 mins
+    if (now - this._lastFetch > 300000) {
       this._lastFetch = now;
       this._fetchHeavyData();
     }
@@ -266,7 +267,7 @@ class UnifiedSolarDashboard extends HTMLElement {
     }
   }
 
-  // ---------------- COMPARE DATA FETCHING (Exactly like solar-energy-compare-card v19) ----------------
+  // ---------------- COMPARE DATA FETCHING ----------------
   async _fetchCompareHistoryData(entityId, start) {
     return this._hass.callWS({
       type: "history/history_during_period",
@@ -415,6 +416,7 @@ class UnifiedSolarDashboard extends HTMLElement {
     }
     const netUnits = Math.max(0, totalUnits - solarUnits);
     
+    // คำนวณด้วยเรทใหม่ (Type 1.2)
     const energyCharge = tieredEnergyCharge(netUnits, DEFAULT_RATES.tiers);
     const ftCharge = netUnits * cfg.ft_baht;
     const subtotal = energyCharge + cfg.service_charge + ftCharge;
@@ -428,8 +430,7 @@ class UnifiedSolarDashboard extends HTMLElement {
     const cfg = this._config;
     const now = new Date();
 
-// 1. Compare Card Data
-    // เปลี่ยนมาดึงค่าจาก _monthly แทน _daily
+    // 1. Compare Card Data - ดึงจาก monthly เสมอตามที่คุณต้องการ (ค่าสะสม) 
     if (cfg.energy_solar_monthly && cfg.energy_total_monthly) {
       const start = new Date(now.getTime() - (this._compareDays + 3) * 24 * 3600 * 1000);
       try {
@@ -927,7 +928,7 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
           </div>
           <div class="row">
             <label>Ft Rate (฿/unit)</label>
-            <input id="ft_baht" type="number" step="0.0001" value="${getVal('ft_baht', 0.3972)}">
+            <input id="ft_baht" type="number" step="0.0001" value="${getVal('ft_baht', FT_DEFAULT)}">
           </div>
         </div>
       </div>
@@ -969,4 +970,4 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
 customElements.define("unified-solar-dashboard", UnifiedSolarDashboard);
 customElements.define("unified-solar-dashboard-editor", UnifiedSolarDashboardEditor);
 window.customCards = window.customCards || [];
-window.customCards.push({ type: "unified-solar-dashboard", name: "Unified Solar Dashboard v2.1", description: "Seamless integration of Real-time, Daily, and MEA Bill with fixed native editor." });
+window.customCards.push({ type: "unified-solar-dashboard", name: "Unified Solar Dashboard v2.2", description: "Seamless integration of Real-time, Daily, and MEA Bill (Type 1.2 updated rates)." });
