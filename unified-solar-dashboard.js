@@ -428,17 +428,18 @@ class UnifiedSolarDashboard extends HTMLElement {
     const cfg = this._config;
     const now = new Date();
 
-    // 1. Compare Card Data
-    if (cfg.energy_solar_daily && cfg.energy_usage_daily) {
+// 1. Compare Card Data
+    // เปลี่ยนมาดึงค่าจาก _monthly แทน _daily
+    if (cfg.energy_solar_monthly && cfg.energy_total_monthly) {
       const start = new Date(now.getTime() - (this._compareDays + 3) * 24 * 3600 * 1000);
       try {
         const [solarHist, usageHist] = await Promise.all([
-          this._fetchCompareHistoryData(cfg.energy_solar_daily, start),
-          this._fetchCompareHistoryData(cfg.energy_usage_daily, start),
+          this._fetchCompareHistoryData(cfg.energy_solar_monthly, start),
+          this._fetchCompareHistoryData(cfg.energy_total_monthly, start),
         ]);
         let solarStat = null, usageStat = null;
-        if (!solarHist.length) solarStat = await this._fetchCompareDailyStats(cfg.energy_solar_daily, this._compareDays).catch(()=>null);
-        if (!usageHist.length) usageStat = await this._fetchCompareDailyStats(cfg.energy_usage_daily, this._compareDays).catch(()=>null);
+        if (!solarHist.length) solarStat = await this._fetchCompareDailyStats(cfg.energy_solar_monthly, this._compareDays).catch(()=>null);
+        if (!usageHist.length) usageStat = await this._fetchCompareDailyStats(cfg.energy_total_monthly, this._compareDays).catch(()=>null);
         
         const all = this._buildDailyData(solarHist, usageHist, solarStat, usageStat);
         this._data15Days = all.slice(-this._compareDays);
