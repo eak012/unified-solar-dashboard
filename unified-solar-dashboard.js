@@ -1,4 +1,4 @@
-/* Unified Solar Dashboard (Version 2.0)
+/* Unified Solar Dashboard (Version 2.1 - Editor Fixed)
  * Seamless Integration of Real-time Power, Daily History, and MEA Bill
  */
 
@@ -154,13 +154,22 @@ class UnifiedSolarDashboard extends HTMLElement {
       ...config,
     };
     
-    // Ensure numerical values
+    // Fallbacks
+    this._config.compare_aggregation = this._config.compare_aggregation || "delta";
     this._config.cutoff_day = Number(this._config.cutoff_day || 24);
     this._config.history_months = Number(this._config.history_months || 0);
     this._config.service_charge = Number(this._config.service_charge ?? 24.62);
     this._config.ft_baht = Number(this._config.ft_baht ?? 0.3972);
     this._config.vat = Number(this._config.vat ?? 7);
     
+    // Merge duplicated keys if user pasted both old and new
+    if(config.entity_power_solar && !config.power_solar) this._config.power_solar = config.entity_power_solar;
+    if(config.entity_power_usage && !config.power_usage) this._config.power_usage = config.entity_power_usage;
+    if(config.entity_energy_solar_daily && !config.energy_solar_daily) this._config.energy_solar_daily = config.entity_energy_solar_daily;
+    if(config.entity_energy_usage_daily && !config.energy_usage_daily) this._config.energy_usage_daily = config.entity_energy_usage_daily;
+    if(config.entity_energy_solar_total && !config.energy_solar_monthly) this._config.energy_solar_monthly = config.entity_energy_solar_total;
+    if(config.entity_energy_total && !config.energy_total_monthly) this._config.energy_total_monthly = config.entity_energy_total;
+
     this._lastFetch = 0;
     this._firstRender();
   }
@@ -826,7 +835,7 @@ class UnifiedSolarDashboard extends HTMLElement {
   }
 }
 
-// ---------------- EDITOR ----------------
+// ---------------- EDITOR (100% Native HTML Inputs Fix) ----------------
 class UnifiedSolarDashboardEditor extends HTMLElement {
   setConfig(config) { this._config = config; this._render(); }
   set hass(hass) { this._hass = hass; if(this.shadowRoot && this.shadowRoot.innerHTML==="") this._render(); }
@@ -839,14 +848,29 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
 
   _render() {
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+    
+    // Fallbacks just in case
+    const c = this._config || {};
+    const getVal = (key, def) => c[key] !== undefined ? c[key] : def;
+
     this.shadowRoot.innerHTML = `
       <style>
         .row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
         .row2 { display: flex; gap: 12px; }
         .row2 .row { flex: 1; }
-        label { font-size: 0.85em; color: var(--secondary-text-color); }
-        ha-textfield, ha-entity-picker, ha-select { width: 100%; }
-        h4 { margin: 16px 0 8px 0; color: var(--primary-text-color); }
+        label { font-size: 0.85em; color: var(--secondary-text-color); font-weight: 500; }
+        
+        /* ใช้งาน Standard Native Input มั่นใจว่ากดติด 100% */
+        input, select { 
+          padding: 8px; border-radius: 4px; 
+          border: 1px solid var(--divider-color, #ccc); 
+          background: var(--card-background-color, #fff); 
+          color: var(--primary-text-color, #000); 
+          font-size: 0.9em; width: 100%; box-sizing: border-box; 
+        }
+        input:focus, select:focus { border-color: var(--primary-color, #03a9f4); outline: none; }
+        ha-entity-picker { width: 100%; }
+        h4 { margin: 16px 0 8px 0; color: var(--primary-text-color); font-size: 1.05em; border-bottom: 1px solid var(--divider-color, rgba(127,127,127,0.2)); padding-bottom: 4px; }
       </style>
       <div>
         <h4>1. Real-time Bar (W & kWh)</h4>
@@ -857,10 +881,11 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
         
         <h4>2. Daily Compare (15 Days)</h4>
         <div class="row">
-          <ha-select id="compare_aggregation" label="Aggregation">
-            <mwc-list-item value="delta">delta (มิเตอร์สะสม)</mwc-list-item>
-            <mwc-list-item value="daily">daily (ค่ารายวัน)</mwc-list-item>
-          </ha-select>
+          <label>Aggregation (รูปแบบการคำนวณกราฟ)</label>
+          <select id="compare_aggregation">
+            <option value="delta" ${getVal('compare_aggregation', 'delta') === 'delta' ? 'selected' : ''}>delta (สำหรับมิเตอร์สะสม)</option>
+            <option value="daily" ${getVal('compare_aggregation', 'delta') === 'daily' ? 'selected' : ''}>daily (สำหรับเซ็นเซอร์รายวัน)</option>
+          </select>
         </div>
 
         <h4>3. MEA Bill & History</h4>
@@ -868,27 +893,46 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
         <div class="row"><ha-entity-picker id="energy_total_monthly" label="Total Grid Energy (kWh)"></ha-entity-picker></div>
         
         <div class="row2">
-          <div class="row"><ha-textfield id="cutoff_day" label="Cutoff Day (1-31)" type="number" min="1" max="31"></ha-textfield></div>
-          <div class="row"><ha-textfield id="cutoff_time" label="Cutoff Time (HH:MM)" type="time"></ha-textfield></div>
+          <div class="row">
+            <label>Cutoff Day (1-31)</label>
+            <input id="cutoff_day" type="number" min="1" max="31" value="${getVal('cutoff_day', 24)}">
+          </div>
+          <div class="row">
+            <label>Cutoff Time (HH:MM)</label>
+            <input id="cutoff_time" type="time" value="${getVal('cutoff_time', '09:00')}">
+          </div>
         </div>
+        
         <div class="row2">
           <div class="row">
-            <ha-select id="history_months" label="History Months">
-              <mwc-list-item value="0">0 (ไม่แสดง)</mwc-list-item>
-              <mwc-list-item value="3">3 เดือน</mwc-list-item>
-              <mwc-list-item value="6">6 เดือน</mwc-list-item>
-              <mwc-list-item value="12">12 เดือน</mwc-list-item>
-            </ha-select>
+            <label>History Months (รอบบิลย้อนหลัง)</label>
+            <select id="history_months">
+              <option value="0" ${getVal('history_months', 0) === 0 ? 'selected' : ''}>0 (ไม่แสดง)</option>
+              <option value="3" ${getVal('history_months', 0) === 3 ? 'selected' : ''}>3 เดือน</option>
+              <option value="6" ${getVal('history_months', 0) === 6 ? 'selected' : ''}>6 เดือน</option>
+              <option value="12" ${getVal('history_months', 0) === 12 ? 'selected' : ''}>12 เดือน</option>
+            </select>
           </div>
-          <div class="row"><ha-textfield id="vat" label="VAT (%)" type="number"></ha-textfield></div>
+          <div class="row">
+            <label>VAT (%)</label>
+            <input id="vat" type="number" step="0.1" value="${getVal('vat', 7)}">
+          </div>
         </div>
+        
         <div class="row2">
-          <div class="row"><ha-textfield id="service_charge" label="Service Charge (฿/month)" type="number"></ha-textfield></div>
-          <div class="row"><ha-textfield id="ft_baht" label="Ft Rate (฿/unit)" type="number"></ha-textfield></div>
+          <div class="row">
+            <label>Service Charge (฿/month)</label>
+            <input id="service_charge" type="number" step="0.01" value="${getVal('service_charge', 24.62)}">
+          </div>
+          <div class="row">
+            <label>Ft Rate (฿/unit)</label>
+            <input id="ft_baht" type="number" step="0.0001" value="${getVal('ft_baht', 0.3972)}">
+          </div>
         </div>
       </div>
     `;
 
+    // 1. Bind HA Entity Pickers
     const bindEntity = (id) => {
       const el = this.shadowRoot.getElementById(id);
       if(el) {
@@ -899,17 +943,18 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
     };
     ['power_solar', 'power_usage', 'energy_solar_daily', 'energy_usage_daily', 'energy_solar_monthly', 'energy_total_monthly'].forEach(bindEntity);
 
+    // 2. Bind Native Inputs/Selects
     const bindInput = (id, isNum) => {
       const el = this.shadowRoot.getElementById(id);
       if(el) {
-        el.value = this._config[id];
-        el.addEventListener(el.tagName === "HA-SELECT" ? "closed" : "change", (e) => {
-          let v = el.tagName === "HA-SELECT" ? el.value : e.target.value;
+        el.addEventListener("change", (e) => {
+          let v = e.target.value;
           if (isNum) v = Number(v);
           if (this._config[id] !== v) this._valueChanged(id, v);
         });
       }
     };
+    
     bindInput("compare_aggregation", false);
     bindInput("cutoff_day", true);
     bindInput("cutoff_time", false);
@@ -923,4 +968,4 @@ class UnifiedSolarDashboardEditor extends HTMLElement {
 customElements.define("unified-solar-dashboard", UnifiedSolarDashboard);
 customElements.define("unified-solar-dashboard-editor", UnifiedSolarDashboardEditor);
 window.customCards = window.customCards || [];
-window.customCards.push({ type: "unified-solar-dashboard", name: "Unified Solar Dashboard v2", description: "Seamless integration of Real-time, Daily, and MEA Bill with History." });
+window.customCards.push({ type: "unified-solar-dashboard", name: "Unified Solar Dashboard v2.1", description: "Seamless integration of Real-time, Daily, and MEA Bill with fixed native editor." });
