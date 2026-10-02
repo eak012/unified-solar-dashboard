@@ -261,7 +261,7 @@ class UnifiedSolarDashboard extends HTMLElement {
       this.ui.flowDots.style.opacity = '0.9';
       this.ui.flowDots.style.animationPlayState = 'running';
       this.ui.flowDots.className = `flow-dots ${isExport ? 'flow-export' : 'flow-import'}`;
-      this.ui.flowDots.style.setProperty('--dot-color', isExport ? '#FAC172' : '#bfb8da');
+      this.ui.flowDots.style.setProperty('--dot-color', isExport ? '#4fc3f7' : '#ffa726');
       let ratio = isExport ? Math.min(1, Math.max(0, gridValAbs - 150) / 1850) : Math.min(1, Math.max(0, gridValAbs - 150) / 3850);
       this.ui.flowDots.style.animationDuration = `${0.7 - (ratio * 0.5)}s`;
     }
@@ -500,11 +500,11 @@ class UnifiedSolarDashboard extends HTMLElement {
         .bar-wrapper { flex: 1; position: relative; display: flex; flex-direction: column; gap: 6px; }
         .progress-track { height: 20px; background: var(--secondary-background-color, rgba(125,125,125,0.1)); border-radius: 10px; position: relative; display: flex; overflow: hidden; }
         .bar-solar { height: 100%; background: #ff5c23; transition: width 0.4s ease-out; }
-        .bar-grid { height: 100%; background: #7facd6; transition: width 0.4s ease-out; }
+        .bar-grid { height: 100%; background: #7FACD6; transition: width 0.4s ease-out; }
         .usage-label-center { position: absolute; width: 100%; text-align: center; font-size: 0.72em; color: #fff; font-weight: 600; line-height: 20px; z-index: 1; text-shadow: 0px 0px 3px rgba(0,0,0,0.4); }
         .flow-container { position: relative; width: 100%; height: 12px; display: flex; align-items: center; }
         .flow-track { position: absolute; left: 0; right: 0; height: 12px; background-image: radial-gradient(circle, var(--divider-color, rgba(125,125,125,0.4)) 1px, transparent 1.5px); background-size: 8px 12px; background-repeat: repeat-x; }
-        .flow-dots { position: absolute; left: 0; right: 0; height: 12px; --dot-color: #bfb8da; background-image: radial-gradient(circle, var(--dot-color) 3.5px, transparent 4px); background-size: 32px 12px; background-repeat: repeat-x; opacity: 0; }
+        .flow-dots { position: absolute; left: 0; right: 0; height: 12px; --dot-color: #ffa726; background-image: radial-gradient(circle, var(--dot-color) 3.5px, transparent 4px); background-size: 32px 12px; background-repeat: repeat-x; opacity: 0; }
         .flow-export { animation: moveDotsRight 2s linear infinite; }
         .flow-import { animation: moveDotsLeft 2s linear infinite; }
         @keyframes moveDotsRight { 0% { background-position: 0 center; } 100% { background-position: 32px center; } }
@@ -519,7 +519,7 @@ class UnifiedSolarDashboard extends HTMLElement {
         .legend-val { color:var(--primary-text-color); font-variant-numeric:tabular-nums; }
         .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:7px; vertical-align:-1px; }
         .dot.solar { background:#ff5c23; }
-        .dot.usage { background:#7facd6; }
+        .dot.usage { background:#7FACD6; }
         .chart-body { display:flex; height:160px; }
         .y-axis { position:relative; width:36px; flex-shrink:0; }
         .y-axis span { position:absolute; right:6px; transform:translateY(50%); font-size:11px; line-height:1; color:var(--secondary-text-color); }
@@ -528,7 +528,7 @@ class UnifiedSolarDashboard extends HTMLElement {
         .grid-line { stroke:var(--divider-color, rgba(127,127,127,.35)); stroke-width:1; }
         .avg-line { stroke:#ff5c23; stroke-width:1; opacity:0.6; }
         .solar-bar { fill:#ff5c23; }
-        .usage-bar { fill:#7facd6; }
+        .usage-bar { fill:#7FACD6; }
         .hit { fill:transparent; cursor:pointer; }
         .day-group.active .hit { fill:rgba(42,137,255,.10); stroke:rgba(42,137,255,.50); stroke-width:1; }
         .day-group.active .solar-bar, .day-group.active .usage-bar { filter:brightness(1.08); }
@@ -719,7 +719,7 @@ class UnifiedSolarDashboard extends HTMLElement {
             <div class="list-date"><b>${l.day}</b><span>${l.month}</span></div>
             <div class="list-mid">
               <div class="list-bar-row"><i class="dot solar"></i><div class="mini-track"><div class="mini-fill" style="background:#ff5c23; width:${sPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.solar)}</span></div>
-              <div class="list-bar-row"><i class="dot usage"></i><div class="mini-track"><div class="mini-fill" style="background:#7facd6; width:${uPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.usage)}</span></div>
+              <div class="list-bar-row"><i class="dot usage"></i><div class="mini-track"><div class="mini-fill" style="background:#7FACD6; width:${uPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.usage)}</span></div>
             </div>
             <div class="list-right"><div style="font-size:11px; color:var(--secondary-text-color);">kWh</div><div class="list-badge">${suff.toFixed(0)}% ครอบคลุม</div></div>
           </div>
