@@ -561,7 +561,7 @@ class UnifiedSolarDashboard extends HTMLElement {
         .minimal-bill-box { background: var(--secondary-background-color, rgba(125,125,125,0.08)); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--divider-color, rgba(125,125,125,0.15)); }
         .bill-cycle { font-size: 0.8em; color: var(--secondary-text-color); margin-bottom: 4px;}
         .bill-units { font-size: 0.9em; font-weight: 500; line-height: 1.4; }
-        .bill-total { font-size: 1.6em; font-weight: 700; color: var(--primary-color, #ff5c23); text-align:right; }
+        .bill-total { font-size: 1.6em; font-weight: 700; color: var(--primary-color, #0288d1); text-align:right; }
         .history-section { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--divider-color, rgba(125,125,125,0.2)); }
         .history-title { font-weight: 600; font-size: 0.95em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; color: var(--primary-text-color); }
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
