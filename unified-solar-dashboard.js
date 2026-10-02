@@ -499,7 +499,7 @@ class UnifiedSolarDashboard extends HTMLElement {
         .grid-icon { border: 1px solid #909399; } 
         .bar-wrapper { flex: 1; position: relative; display: flex; flex-direction: column; gap: 6px; }
         .progress-track { height: 20px; background: var(--secondary-background-color, rgba(125,125,125,0.1)); border-radius: 10px; position: relative; display: flex; overflow: hidden; }
-        .bar-solar { height: 100%; background: #73c088; transition: width 0.4s ease-out; }
+        .bar-solar { height: 100%; background: #ff5c23; transition: width 0.4s ease-out; }
         .bar-grid { height: 100%; background: #7facd6; transition: width 0.4s ease-out; }
         .usage-label-center { position: absolute; width: 100%; text-align: center; font-size: 0.72em; color: #fff; font-weight: 600; line-height: 20px; z-index: 1; text-shadow: 0px 0px 3px rgba(0,0,0,0.4); }
         .flow-container { position: relative; width: 100%; height: 12px; display: flex; align-items: center; }
@@ -518,7 +518,7 @@ class UnifiedSolarDashboard extends HTMLElement {
         .legend { display:flex; gap:18px; align-items:center; flex-wrap:wrap; font-size:12px; margin-bottom:10px; color:var(--secondary-text-color); }
         .legend-val { color:var(--primary-text-color); font-variant-numeric:tabular-nums; }
         .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:7px; vertical-align:-1px; }
-        .dot.solar { background:#73c088; }
+        .dot.solar { background:#ff5c23; }
         .dot.usage { background:#7facd6; }
         .chart-body { display:flex; height:160px; }
         .y-axis { position:relative; width:36px; flex-shrink:0; }
@@ -526,8 +526,8 @@ class UnifiedSolarDashboard extends HTMLElement {
         .plot { flex:1; position:relative; min-width:0; }
         .chart-svg { display:block; width:100%; height:100%; }
         .grid-line { stroke:var(--divider-color, rgba(127,127,127,.35)); stroke-width:1; }
-        .avg-line { stroke:#73c088; stroke-width:1; opacity:0.6; }
-        .solar-bar { fill:#73c088; }
+        .avg-line { stroke:#ff5c23; stroke-width:1; opacity:0.6; }
+        .solar-bar { fill:#ff5c23; }
         .usage-bar { fill:#7facd6; }
         .hit { fill:transparent; cursor:pointer; }
         .day-group.active .hit { fill:rgba(42,137,255,.10); stroke:rgba(42,137,255,.50); stroke-width:1; }
@@ -718,7 +718,7 @@ class UnifiedSolarDashboard extends HTMLElement {
           <div class="list-row${active}" data-date="${d.date}">
             <div class="list-date"><b>${l.day}</b><span>${l.month}</span></div>
             <div class="list-mid">
-              <div class="list-bar-row"><i class="dot solar"></i><div class="mini-track"><div class="mini-fill" style="background:#73c088; width:${sPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.solar)}</span></div>
+              <div class="list-bar-row"><i class="dot solar"></i><div class="mini-track"><div class="mini-fill" style="background:#ff5c23; width:${sPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.solar)}</span></div>
               <div class="list-bar-row"><i class="dot usage"></i><div class="mini-track"><div class="mini-fill" style="background:#7facd6; width:${uPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.usage)}</span></div>
             </div>
             <div class="list-right"><div style="font-size:11px; color:var(--secondary-text-color);">kWh</div><div class="list-badge">${suff.toFixed(0)}% ครอบคลุม</div></div>
@@ -751,7 +751,7 @@ class UnifiedSolarDashboard extends HTMLElement {
           const x = (e.clientX ?? rect.left + rect.width / 2) - rect.left;
           const y = (e.clientY ?? rect.top + 20) - rect.top;
           const diff = d.solar - d.usage;
-          const diffColor = diff >= 0 ? "#73c088" : "#db4437";
+          const diffColor = diff >= 0 ? "#ff5c23" : "#db4437";
           tooltip.innerHTML = `
             <div class="tip-date">${this._dateFull(d.date)}</div>
             <div><i class="dot solar"></i>ผลิตไฟ <b>${this._fmt(d.solar)} kWh</b></div>
