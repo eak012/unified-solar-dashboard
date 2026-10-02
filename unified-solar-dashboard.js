@@ -261,7 +261,7 @@ class UnifiedSolarDashboard extends HTMLElement {
       this.ui.flowDots.style.opacity = '0.9';
       this.ui.flowDots.style.animationPlayState = 'running';
       this.ui.flowDots.className = `flow-dots ${isExport ? 'flow-export' : 'flow-import'}`;
-      this.ui.flowDots.style.setProperty('--dot-color', isExport ? '#ff5c23' : '#00c3ff');
+      this.ui.flowDots.style.setProperty('--dot-color', isExport ? '#FAC172' : '#bfb8da');
       let ratio = isExport ? Math.min(1, Math.max(0, gridValAbs - 150) / 1850) : Math.min(1, Math.max(0, gridValAbs - 150) / 3850);
       this.ui.flowDots.style.animationDuration = `${0.7 - (ratio * 0.5)}s`;
     }
@@ -499,12 +499,12 @@ class UnifiedSolarDashboard extends HTMLElement {
         .grid-icon { border: 1px solid #909399; } 
         .bar-wrapper { flex: 1; position: relative; display: flex; flex-direction: column; gap: 6px; }
         .progress-track { height: 20px; background: var(--secondary-background-color, rgba(125,125,125,0.1)); border-radius: 10px; position: relative; display: flex; overflow: hidden; }
-        .bar-solar { height: 100%; background: #ff5c23; transition: width 0.4s ease-out; }
-        .bar-grid { height: 100%; background: #00c3ff; transition: width 0.4s ease-out; }
+        .bar-solar { height: 100%; background: #73c088; transition: width 0.4s ease-out; }
+        .bar-grid { height: 100%; background: #7facd6; transition: width 0.4s ease-out; }
         .usage-label-center { position: absolute; width: 100%; text-align: center; font-size: 0.72em; color: #fff; font-weight: 600; line-height: 20px; z-index: 1; text-shadow: 0px 0px 3px rgba(0,0,0,0.4); }
         .flow-container { position: relative; width: 100%; height: 12px; display: flex; align-items: center; }
         .flow-track { position: absolute; left: 0; right: 0; height: 12px; background-image: radial-gradient(circle, var(--divider-color, rgba(125,125,125,0.4)) 1px, transparent 1.5px); background-size: 8px 12px; background-repeat: repeat-x; }
-        .flow-dots { position: absolute; left: 0; right: 0; height: 12px; --dot-color: #00c3ff; background-image: radial-gradient(circle, var(--dot-color) 3.5px, transparent 4px); background-size: 32px 12px; background-repeat: repeat-x; opacity: 0; }
+        .flow-dots { position: absolute; left: 0; right: 0; height: 12px; --dot-color: #bfb8da; background-image: radial-gradient(circle, var(--dot-color) 3.5px, transparent 4px); background-size: 32px 12px; background-repeat: repeat-x; opacity: 0; }
         .flow-export { animation: moveDotsRight 2s linear infinite; }
         .flow-import { animation: moveDotsLeft 2s linear infinite; }
         @keyframes moveDotsRight { 0% { background-position: 0 center; } 100% { background-position: 32px center; } }
@@ -518,17 +518,17 @@ class UnifiedSolarDashboard extends HTMLElement {
         .legend { display:flex; gap:18px; align-items:center; flex-wrap:wrap; font-size:12px; margin-bottom:10px; color:var(--secondary-text-color); }
         .legend-val { color:var(--primary-text-color); font-variant-numeric:tabular-nums; }
         .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:7px; vertical-align:-1px; }
-        .dot.solar { background:#ff5c23; }
-        .dot.usage { background:#00c3ff; }
+        .dot.solar { background:#73c088; }
+        .dot.usage { background:#7facd6; }
         .chart-body { display:flex; height:160px; }
         .y-axis { position:relative; width:36px; flex-shrink:0; }
         .y-axis span { position:absolute; right:6px; transform:translateY(50%); font-size:11px; line-height:1; color:var(--secondary-text-color); }
         .plot { flex:1; position:relative; min-width:0; }
         .chart-svg { display:block; width:100%; height:100%; }
         .grid-line { stroke:var(--divider-color, rgba(127,127,127,.35)); stroke-width:1; }
-        .avg-line { stroke:#ff5c23; stroke-width:1; opacity:0.6; }
-        .solar-bar { fill:#ff5c23; }
-        .usage-bar { fill:#00c3ff; }
+        .avg-line { stroke:#73c088; stroke-width:1; opacity:0.6; }
+        .solar-bar { fill:#73c088; }
+        .usage-bar { fill:#7facd6; }
         .hit { fill:transparent; cursor:pointer; }
         .day-group.active .hit { fill:rgba(42,137,255,.10); stroke:rgba(42,137,255,.50); stroke-width:1; }
         .day-group.active .solar-bar, .day-group.active .usage-bar { filter:brightness(1.08); }
@@ -718,8 +718,8 @@ class UnifiedSolarDashboard extends HTMLElement {
           <div class="list-row${active}" data-date="${d.date}">
             <div class="list-date"><b>${l.day}</b><span>${l.month}</span></div>
             <div class="list-mid">
-              <div class="list-bar-row"><i class="dot solar"></i><div class="mini-track"><div class="mini-fill" style="background:#ff5c23; width:${sPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.solar)}</span></div>
-              <div class="list-bar-row"><i class="dot usage"></i><div class="mini-track"><div class="mini-fill" style="background:#00c3ff; width:${uPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.usage)}</span></div>
+              <div class="list-bar-row"><i class="dot solar"></i><div class="mini-track"><div class="mini-fill" style="background:#73c088; width:${sPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.solar)}</span></div>
+              <div class="list-bar-row"><i class="dot usage"></i><div class="mini-track"><div class="mini-fill" style="background:#7facd6; width:${uPct.toFixed(1)}%"></div></div><span class="list-val">${this._fmt(d.usage)}</span></div>
             </div>
             <div class="list-right"><div style="font-size:11px; color:var(--secondary-text-color);">kWh</div><div class="list-badge">${suff.toFixed(0)}% ครอบคลุม</div></div>
           </div>
@@ -751,7 +751,7 @@ class UnifiedSolarDashboard extends HTMLElement {
           const x = (e.clientX ?? rect.left + rect.width / 2) - rect.left;
           const y = (e.clientY ?? rect.top + 20) - rect.top;
           const diff = d.solar - d.usage;
-          const diffColor = diff >= 0 ? "#ff5c23" : "#db4437";
+          const diffColor = diff >= 0 ? "#73c088" : "#db4437";
           tooltip.innerHTML = `
             <div class="tip-date">${this._dateFull(d.date)}</div>
             <div><i class="dot solar"></i>ผลิตไฟ <b>${this._fmt(d.solar)} kWh</b></div>
