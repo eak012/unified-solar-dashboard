@@ -794,7 +794,7 @@ class UnifiedSolarDashboard extends HTMLElement {
             <span style="color: var(--primary-color);">สุทธิคิดเงิน: <b>${b.netUnits.toFixed(1)}</b> <span style="font-size:0.85em;">kWh</span></span>
           </div>
         </div>
-        <div class="bill-total">${b.cost.toFixed(2)} <small style="font-size:0.6em;">฿</small></div>
+        <div class="bill-total"><span style="color: #ff5c23;">${b.cost.toFixed(2)}</span> <small style="font-size:0.6em;">฿</small></div>
       </div>
     `;
 
